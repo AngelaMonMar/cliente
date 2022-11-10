@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import vista.IVista;
 
 import vista.VistaJFrame_PrincipalLogin;
-import static modelo.ModeloProtocoloCliente.*;
+import static utils.ProtocoloCliente.*;
 import vista.VistaJFrame_IP;
 
 import vista.VistaJFrame_olvideContraseña;
@@ -34,8 +34,9 @@ import vista.VistaJFrame_formularioRegistro;
 /**
  *
  * @author sinNombre
- Modelo el encargado de enviar y recibir los msg del servidor
+ Modelo el encargado de recibir los msg del servidor
  * depende de la respuesta entra en el switch/gbf<a434**
+ * 
  * 
  * 
  */
@@ -151,8 +152,8 @@ public class ModeloCliente extends Thread {
                     vistaIp.setVisible(false);
                     String ip=vStr[1];
                     estableceHost(ip);
-
                     break;
+                    
                 // cases de vista_login
 //                       case ESTADO_CHECKBOX:// entra al ejecutar el prg- comprueba si anteriormente select. la casilla checkbox
 //                            System.out.println("MC :: stoy estado checkbox "+vStr[1]);
@@ -181,12 +182,11 @@ public class ModeloCliente extends Thread {
                            vistaMenu.hacerVisible();
                            vistaMenu.mostrarRespuesta(mensaje);
                            // fin prueba menu-T                             
-                          break;
-                          
+                          break;                          
                        case LOGIN_NOT_OK:
-                           controlador.vista_muestra_msg(mensaje);
-                          break;
-                          
+                           vista_login.mostrarRespuesta(mensaje);
+                          //controlador.vista_muestra_msg(mensaje);                           
+                          break;                          
                        case RECORDAR_DATOS_LOGIN:
                            //controlador.vista_muestra_msg(vStr[1]);
                            vista_olvidePw=new VistaJFrame_olvideContraseña();
@@ -195,36 +195,33 @@ public class ModeloCliente extends Thread {
                            vista_olvidePw.inicializar();
                            vista_olvidePw.hacerVisible();
                            vista_olvidePw.mostrarRespuesta(mensaje);
-                           break; 
-                    
+                           break;                    
                            //VistaRegister
                        case VOLVER:// Habilita los botones del frame logi
                            vista_login =getVista_login();
                            vista_login.inhabilitarBotones(true);
                            break;
 
+                           
                        case REGISTER: //ha pulsado el boton registrar. se crea y abre ventana registro
                            controlador.vista_muestra_msg(mensaje);
                            vista_login =getVista_login();
                            vista_login.inhabilitarBotones(false);
-
                            vista_register=new  VistaJFrame_formularioRegistro ();
                            vista_register.setControlador(controlador);
                            vista_register.inicializar();
                            vista_register.hacerVisible();
-                          break;
-                          
+                          break;                          
                          case REGISTER_FORM_OK:      
                             vista_register.cerrar();
+                            JOptionPane.showMessageDialog(null, "Usuario insertado con exito.");
                             vista_login.mostrarRespuesta(REGISTER+SEPARADOR+"Introduce nuevamente los datos");
                             break; 
-
                         case REGISTER_FORM_NOT_OK:// ha enviado campos vacio/ erroneos
                             // vista_login.setVisible(true);           
                             vista_register.mostrarRespuesta(mensaje);
                             vista_login.inhabilitarBotones(false);
                             break;
-
                         case REGISTER_FORM: // datos son validados y correctos, se  cierra la ventana con formulario , se abre ventana login
                            //vista_register.mostrarRespuesta(respuesta_servidor);
                            vista_register.mostrarRespuesta(mensaje);
@@ -237,64 +234,123 @@ public class ModeloCliente extends Thread {
                     
                           
                            // Vista_olvideContraseña 
+   //PENDIENTE                       
                         case RECUPERAR_PW:
-
                           break; 
-                        case VOLVER_VISTA_LOGIN: // cerrar el actual , abrir el login
+                        case VOLVER_VISTA_LOGIN: //desde vista register cerrar el actual , abrir el login
                             vista_olvidePw.cerrar();
                             vista_login.setVisible(true);
                             vista_login.mostrarRespuesta(mensaje);//nick usuario VOLVER_VISTA_LOGIN+SEPARADOR+"NOK"+SEPARADOR+"NO estan registrado"
                           break;  
                           
                           
-                        //VistaMenu
-                        case ACTION1:
-                             str=vStr[1];// ACTION2 + SEPARADOR+OK+SEPARADOR + estafas
-                             //System.out.println("----ACTION1----"+str);
+                          //Menu Usuario 
+                        case MENU_USUARIO://getUsuarios
+                            if(vStr.length>1){
+                                str=vStr[1];// ACTION + SEPARADOR+OK+SEPARADOR + estafas
                              if(str.equals(OK))
                                 vistaMenu.mostrarRespuesta(mensaje);
                              else
                                  JOptionPane.showMessageDialog(null, "No hay ningun usuario.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                            
+                            }else{
+                                 JOptionPane.showMessageDialog(null, "No hay ningun usuario.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                            }
                             break;
-                        case ACTION2:
-                              str=vStr[1];// ACTION2 + SEPARADOR+OK+SEPARADOR + estafadores
-                             // System.out.println("--------"+str);
+                        case INSERT_USUARIO:
+                                vistaMenu.mostrarRespuesta(mensaje);
+                            break;    
+                        case DELETE_USUARIO:
+                              vistaMenu.mostrarRespuesta(mensaje);
+                            break; 
+                        case UPDATE_USUARIO:
+                                vistaMenu.mostrarRespuesta(mensaje);
+                            break;  
+                        
+                            //MEnu estafador
+                        case MENU_ESTAFADOR://get estafadores
+                            if(vStr.length>1){
+                                str=vStr[1];// MENU_ESTAFADOR + SEPARADOR+OK+SEPARADOR + estafadores
+                                System.out.println("--------"+str);
                              if(str.equals(OK))
                                 vistaMenu.mostrarRespuesta(mensaje);
                              else
                                  JOptionPane.showMessageDialog(null, "No hay ningun estafador.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                            }else{
+                                 JOptionPane.showMessageDialog(null, "No hay ningun estafador.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                            }
                             break;
-                        case ACTION3:
-                              str=vStr[1];// ACTION3 + SEPARADOR +OK+ comentario_estafas
-                              System.out.println("--------"+str);
-                             if(str.equals(OK))
-                                vistaMenu.mostrarRespuesta(mensaje);
-                             else
+                            
+                            
+                        case MENU_COMENTARIO:
+                            if(vStr.length>1){
+                                str=vStr[1];// MENU_COMENTARIO + SEPARADOR +OK+ comentario_estafas
+                                System.out.println("--------"+str);
+                                if(str.equals(OK))
+                                   vistaMenu.mostrarRespuesta(mensaje);
+                                else
                                  JOptionPane.showMessageDialog(null, "No hay ningun comentario_estafas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
-                            break;
-                        case ACTION4:
-                              str=vStr[1];// ACTION4 + SEPARADOR+OK + etiketas
-                             if(str.equals(OK))
-                                vistaMenu.mostrarRespuesta(mensaje);
-                             else
-                                 JOptionPane.showMessageDialog(null, "No hay ningun etiketas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
-                            break;
-                        case ACTION5:
+                              
+                            }else{
+                                 JOptionPane.showMessageDialog(null, "No hay ningun comentario_estafas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                            }
+                          break;
+                         case DELETE_COMMENT:
                               vistaMenu.mostrarRespuesta(mensaje);
                             break; 
-                        case DELETE:
+                        case UPDATE_COMMENT:
+                                vistaMenu.mostrarRespuesta(mensaje);
+                            break;   
+                          
+                          
+                        case MENU_TAG://MENU_TAG :OK :tags
+                             if(vStr.length>1){
+                                  str=vStr[1];//
+                                  if(str.equals(OK))
+                                     vistaMenu.mostrarRespuesta(mensaje);
+                                  else
+                                     JOptionPane.showMessageDialog(null, "No hay ningun etiketas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                             }else{
+                               JOptionPane.showMessageDialog(null, "No hay ningun etiketas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                             }
+                            break;  
+                        case INSERT_TAG:
+                              vistaMenu.mostrarRespuesta(mensaje);
+                            break;     
+                        case DELETE_TAG:
                               vistaMenu.mostrarRespuesta(mensaje);
                             break; 
-                        case UPDATE:
-                                vistaMenu.mostrarRespuesta(mensaje);
+                        case UPDATE_TAG:
+                              vistaMenu.mostrarRespuesta(mensaje);
                             break; 
                             
-                        case INSERT:
-                                vistaMenu.mostrarRespuesta(mensaje);
+                            
+                            
+                        case MENU_CATEGORIA:
+                              if(vStr.length>1){
+                                  str=vStr[1];//
+                                  if(str.equals(OK))
+                                     vistaMenu.mostrarRespuesta(mensaje);
+                                  else
+                                     JOptionPane.showMessageDialog(null, "No hay ningun etiketas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                             }else{
+                               JOptionPane.showMessageDialog(null, "No hay ningun etiketas.","WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                             }
+                             vistaMenu.mostrarRespuesta(mensaje);
                             break; 
-                        case ADDTAG:
-                                vistaMenu.mostrarRespuesta(mensaje);
-                            break;    
+                        case INSERT_CATEGORIA:
+                              vistaMenu.mostrarRespuesta(mensaje);
+                            break;     
+                        case DELETE_CATEGORIA:
+                              vistaMenu.mostrarRespuesta(mensaje);
+                            break; 
+                        case UPDATE_CATEGORIA:
+                              vistaMenu.mostrarRespuesta(mensaje);
+                            break;     
+                      
+                            
+                      
+                       
                 default:
                           controlador.vista_muestra_msg("algo salio mal"); 
                         break;

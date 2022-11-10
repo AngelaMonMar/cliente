@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import javax.swing.JOptionPane;
 import modelo.ModeloCliente;
 import vista.IVista;
-import static modelo.ModeloProtocoloCliente.*;
+import static utils.ProtocoloCliente.*;
 
 /**
  *
@@ -63,92 +63,129 @@ public class ControladorCliente implements ActionListener {
                 String [] vstr=mensaje.split(SEPARADOR);
                 System.out.println("CC IP "+vstr[1]);
                 modelo.estableceHost(vstr[1]);
-
                 //modelo.enviarMensaje_alServidor(mensaje);
                 break;
-            
             case LOGIN:
                  mensaje=LOGIN+SEPARADOR+modelo.getVista_login().getMensajeAEnviar();// LOGIN:email:pw:checkbox
                  modelo.enviarMensaje_alServidor(mensaje);// a:a
-                break;
+                 break;
             case RECORDAR_DATOS_LOGIN:// activo casilla checkbox
                  mensaje=RECORDAR_DATOS_LOGIN+SEPARADOR;//+vista.getMensajeAEnviar();
                  System.out.println("switch CC RECORDAR_DATOS_LOGIN  "+mensaje);
                  modelo.enviarMensaje_alServidor(mensaje);
-                break;    
+                 break;    
     
             case REGISTER:
                  mensaje=REGISTER+SEPARADOR;
                  modelo.enviarMensaje_alServidor(mensaje);
                  break;
-             case REGISTER_FORM:// nombre:apellidos:nick:email:pw
+            case REGISTER_FORM:// nombre:apellidos:nick:email:pw
                  mensaje=REGISTER_FORM+SEPARADOR + modelo.getVista_register().getMensajeAEnviar();// lo que ha intro el cl en el formulario
                  modelo.enviarMensaje_alServidor(mensaje);//nom:apellidos:nick:email:pw OR SIN_DATOS
                  break;
                  
-             case VOLVER:
+            case VOLVER:
                  mensaje=VOLVER;
                  modelo.enviarMensaje_alServidor(mensaje);//nom:apellidos:nick:email:pw
                  break;
                 
                   // VistaJFrame_olvideContraseña 
-             case RECUPERAR_PW:
+            case RECUPERAR_PW:
                  mensaje=RECUPERAR_PW+SEPARADOR+ modelo.getVista_recuperarPw().getMensajeAEnviar();
                  System.out.println("switch CC  recuperar PW "+mensaje);
                  modelo.enviarMensaje_alServidor(mensaje);
                  break; 
-             case VOLVER_VISTA_LOGIN:
+            case VOLVER_VISTA_LOGIN:
                  mensaje=VOLVER_VISTA_LOGIN;
                  System.out.println("switch CC  VOLVER_VISTA_LOGIN "+mensaje);
                  modelo.enviarMensaje_alServidor(mensaje);
                  break;   
                  
-                 //MENU
-            case ACTION1:
+                 //Menu cases:--------------
+            //USUARIO   
+            case MENU_USUARIO:
                  modelo.enviarMensaje_alServidor(mensaje);//
                  break; 
-              case ACTION2:
+            case DELETE_USUARIO:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(DELETE_USUARIO+SEPARADOR+mensaje);//
+                 break; 
+            case UPDATE_USUARIO:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 System.out.println("CC: update_usuario "+mensaje);
+                 modelo.enviarMensaje_alServidor(UPDATE_USUARIO+SEPARADOR+mensaje);//UPDATE:id:name:nick:email;
+                 break;
+            case INSERT_USUARIO:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(UPDATE_USUARIO+SEPARADOR+mensaje);//
+                 break; 
+      
+                   
+            //Estafador cases       
+            case MENU_ESTAFADOR:
+                 modelo.enviarMensaje_alServidor(mensaje);//
+                 break; 
+                 
+                 
+                 
+            //COMENTARIO     
+            case MENU_COMENTARIO:
+                 modelo.enviarMensaje_alServidor(mensaje);//
+                 break;
+            case DELETE_COMMENT:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(DELETE_COMMENT+SEPARADOR+mensaje);//
+                 break; 
+            case UPDATE_COMMENT:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 System.out.println("CC: update_usuario "+mensaje);
+                 modelo.enviarMensaje_alServidor(UPDATE_COMMENT+SEPARADOR+mensaje);//UPDATE_COMMENT:id:nick:contenido;
+                 break;      
+                 
+            //TAG    
+            case MENU_TAG:
                  modelo.enviarMensaje_alServidor(mensaje);//
                  break;  
-               case ACTION3:
-                 modelo.enviarMensaje_alServidor(mensaje);//
+            case INSERT_TAG:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(INSERT_TAG+SEPARADOR+mensaje);//
+                 break;
+            case UPDATE_TAG:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 System.out.println("CC: UPDATE_TAG "+mensaje);
+                 modelo.enviarMensaje_alServidor(UPDATE_TAG+SEPARADOR+mensaje);//UPDATE:id:valor;
                  break; 
-              case ACTION4:
-                 modelo.enviarMensaje_alServidor(mensaje);//
-                 break;  
-                 
-               case ACTION5:
-                     modelo.getVista_register().getMensajeAEnviar();
+            case DELETE_TAG:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(DELETE_TAG+SEPARADOR+mensaje);//
                  break; 
                  
-               case DELETE:
-                   mensaje=modelo.getVista_Menu().getMensajeAEnviar();
-                   modelo.enviarMensaje_alServidor(DELETE+SEPARADOR+mensaje);//
-                   break; 
+             //CATEGORIA    
+            case MENU_CATEGORIA:
+                 modelo.enviarMensaje_alServidor(mensaje);//MENU_CATEGORIA
+                 break; 
+            case INSERT_CATEGORIA:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(INSERT_CATEGORIA+SEPARADOR+mensaje);//
+                 break;     
+            case UPDATE_CATEGORIA:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 System.out.println("CC: UPDATE_CATEGORIA "+mensaje);
+                 modelo.enviarMensaje_alServidor(UPDATE_CATEGORIA+SEPARADOR+mensaje);//UPDATE:id:valor;
+                 break; 
+            case DELETE_CATEGORIA:
+                 mensaje=modelo.getVista_Menu().getMensajeAEnviar();
+                 modelo.enviarMensaje_alServidor(DELETE_CATEGORIA+SEPARADOR+mensaje);//
+                 break;     
                    
-                  case UPDATE:
-                   mensaje=modelo.getVista_Menu().getMensajeAEnviar();
-                   modelo.enviarMensaje_alServidor(UPDATE+SEPARADOR+mensaje);//
-                   break;  
-                   
-                 case INSERT:
-                   mensaje=modelo.getVista_Menu().getMensajeAEnviar();
-                   modelo.enviarMensaje_alServidor(UPDATE+SEPARADOR+mensaje);//
-                   break; 
-                
-                case ADDTAG:
-                   mensaje=modelo.getVista_Menu().getMensajeAEnviar();
-                   modelo.enviarMensaje_alServidor(ADDTAG+SEPARADOR+mensaje);//
-                   break;
-                   
-                case SIN_DATOS:
-                     JOptionPane.showMessageDialog(null, "Deben introducir IP valida");
-                    break;
+            case SIN_DATOS://auxiliar
+                 JOptionPane.showMessageDialog(null, "Deben introducir IP valida");
+                 break;
                    
                 default:
                      System.out.println(" CC Surgio error "+mensaje);
-                    modelo.enviarMensaje_alServidor(SIN_DATOS+SEPARADOR+SIN_DATOS);//
-                    break;
+                     modelo.enviarMensaje_alServidor(SIN_DATOS+SEPARADOR+SIN_DATOS);//
+                     break;
         }
     }
     

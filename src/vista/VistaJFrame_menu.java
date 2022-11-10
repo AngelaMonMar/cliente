@@ -6,19 +6,30 @@
 package vista;
 
 import controlador.ControladorCliente;
-import modelo.Estafador_datos;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import modelo.Comentario;
-import modelo.Estafador;
-import modelo.Etiketa;
-import static modelo.ModeloProtocoloCliente.*;
-import modelo.Usuario;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
+import modelo.objetos.Comentario;
+import modelo.objetos.Estafador;
+import modelo.objetos.Tag;
+import static utils.ProtocoloCliente.*;
+import modelo.objetos.Usuario;
+
+import modelo.objetos.*;
 
 
 
@@ -26,16 +37,14 @@ import modelo.Usuario;
  *
  * @author RojeruSan
  */
-public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
+public class VistaJFrame_menu extends javax.swing.JFrame implements IVista, ItemListener{
 
-    /**
-     * Creates new form Principal
-     */
-       ControladorCliente controlador;
+    ControladorCliente controlador;
     public VistaJFrame_menu() {
         initComponents();
+        jPanel_filter.setVisible(false);
         this.setLocationRelativeTo(this);
-       // setModeloUsuarios();
+
     }
 
     /**
@@ -46,22 +55,21 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel_contenidoMenu = new javax.swing.JPanel();
-        jPanel_menu = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jPanel_menu_lateral = new javax.swing.JPanel();
+        jButton_menu_usuarios = new javax.swing.JButton();
+        jButton_menu_tags = new javax.swing.JButton();
+        jButton_menu_comment = new javax.swing.JButton();
+        jButton_menu_estafadores = new javax.swing.JButton();
         jLabel_home = new javax.swing.JLabel();
         jLabel_home1 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable = new javax.swing.JTable();
-        jPanel_botones = new javax.swing.JPanel();
-        jButton_update = new javax.swing.JButton();
-        jButton_delete = new javax.swing.JButton();
+        jButton_menu_categoria = new javax.swing.JButton();
+        jPanel_usuario = new javax.swing.JPanel();
+        jButton_update_usuario = new javax.swing.JButton();
+        jButton_delete_usuario = new javax.swing.JButton();
         jtext_nick = new java.awt.TextField();
         jtext_email = new java.awt.TextField();
         jtext_name = new java.awt.TextField();
@@ -70,10 +78,50 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
         label_id_nombre = new java.awt.Label();
         jtext_id = new java.awt.TextField();
         label_id = new java.awt.Label();
-        jPanel_addTags = new javax.swing.JPanel();
-        jButton_enviarTag = new javax.swing.JButton();
+        jPanel_tabla = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable = new javax.swing.JTable();
+        jPanel_estafador = new javax.swing.JPanel();
+        jButton_updateEstafador = new javax.swing.JButton();
+        jButton_deleteEstafador = new javax.swing.JButton();
+        jtext_datos_3estafador = new java.awt.TextField();
+        jtext_datos_2estafador = new java.awt.TextField();
+        jtext_datos_1estafador = new java.awt.TextField();
+        label_dato3 = new java.awt.Label();
+        label_dato2 = new java.awt.Label();
+        label_dato1 = new java.awt.Label();
+        jtext_idEstafador = new java.awt.TextField();
+        label_id_estafador = new java.awt.Label();
+        jPanel_comentario = new javax.swing.JPanel();
+        jButton_updateComment = new javax.swing.JButton();
+        jButton_deleteComment = new javax.swing.JButton();
+        jtext_comment = new java.awt.TextField();
+        jtext_comment_comment = new java.awt.TextField();
+        jtext_nick_comment = new java.awt.TextField();
+        label_comment = new java.awt.Label();
+        label_comment_comment = new java.awt.Label();
+        label_nickPublicado = new java.awt.Label();
+        jtext_idComment = new java.awt.TextField();
+        label_id_comentario = new java.awt.Label();
+        jPanel_tag = new javax.swing.JPanel();
+        jButton_updateTag = new javax.swing.JButton();
+        jButton_deleteTag = new javax.swing.JButton();
+        label_nombreTag = new java.awt.Label();
+        jtext_idTag = new java.awt.TextField();
+        label_id_tag = new java.awt.Label();
+        jButton_enviarTags = new javax.swing.JButton();
+        jtext_valor_tag = new javax.swing.JTextField();
+        jPanel_categoria = new javax.swing.JPanel();
+        jButton_updateCategory = new javax.swing.JButton();
+        jButton_deleteCategory = new javax.swing.JButton();
+        label_nombreCategory = new java.awt.Label();
+        jtext_idCategoria = new java.awt.TextField();
+        label_id_Categoria = new java.awt.Label();
+        jButton_insertCategory = new javax.swing.JButton();
+        jtext_valor_category = new javax.swing.JTextField();
+        jPanel_filter = new javax.swing.JPanel();
+        jText_filter = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jTextField_newTag = new javax.swing.JTextField();
         jPanel_superiorMenu = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton();
         jTextField_saludo = new javax.swing.JTextField();
@@ -81,94 +129,95 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 51));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setMinimumSize(new java.awt.Dimension(1200, 600));
+        setResizable(false);
 
         jPanel_contenidoMenu.setBackground(new java.awt.Color(204, 255, 255));
         jPanel_contenidoMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel_menu.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel_menu_lateral.setBackground(new java.awt.Color(153, 153, 153));
         org.jdesktop.swingx.border.DropShadowBorder dropShadowBorder1 = new org.jdesktop.swingx.border.DropShadowBorder();
-        jPanel_menu.setBorder(dropShadowBorder1);
-        jPanel_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+        jPanel_menu_lateral.setBorder(dropShadowBorder1);
+        jPanel_menu_lateral.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel_menuMouseClicked(evt);
+                jPanel_menu_lateralMouseClicked(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(153, 153, 153));
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Usuarios");
-        jButton1.setActionCommand("ACTION1");
-        jButton1.setBorder(null);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton1.setMargin(new java.awt.Insets(2, 20, 2, 20));
-        jButton1.setOpaque(true);
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton_menu_usuarios.setBackground(new java.awt.Color(153, 153, 153));
+        jButton_menu_usuarios.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jButton_menu_usuarios.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_menu_usuarios.setText("Usuarios");
+        jButton_menu_usuarios.setActionCommand("MENU_USUARIO");
+        jButton_menu_usuarios.setBorder(null);
+        jButton_menu_usuarios.setContentAreaFilled(false);
+        jButton_menu_usuarios.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton_menu_usuarios.setMargin(new java.awt.Insets(2, 20, 2, 20));
+        jButton_menu_usuarios.setOpaque(true);
+        jButton_menu_usuarios.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                jButton_menu_usuariosMouseClicked(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton_menu_usuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton_menu_usuariosActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(0, 153, 255));
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Tags");
-        jButton4.setActionCommand("ACTION4");
-        jButton4.setBorder(null);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton4.setOpaque(true);
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton_menu_tags.setBackground(new java.awt.Color(0, 153, 255));
+        jButton_menu_tags.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton_menu_tags.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_menu_tags.setText("Tags");
+        jButton_menu_tags.setActionCommand("MENU_TAG");
+        jButton_menu_tags.setBorder(null);
+        jButton_menu_tags.setContentAreaFilled(false);
+        jButton_menu_tags.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton_menu_tags.setOpaque(true);
+        jButton_menu_tags.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton4MouseClicked(evt);
+                jButton_menu_tagsMouseClicked(evt);
             }
         });
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton_menu_tags.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton_menu_tagsActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(0, 153, 255));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Comentarios");
-        jButton3.setActionCommand("ACTION3");
-        jButton3.setBorder(null);
-        jButton3.setContentAreaFilled(false);
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton3.setOpaque(true);
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton_menu_comment.setBackground(new java.awt.Color(0, 153, 255));
+        jButton_menu_comment.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton_menu_comment.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_menu_comment.setText("Comentarios");
+        jButton_menu_comment.setActionCommand("MENU_COMENTARIO");
+        jButton_menu_comment.setBorder(null);
+        jButton_menu_comment.setContentAreaFilled(false);
+        jButton_menu_comment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton_menu_comment.setOpaque(true);
+        jButton_menu_comment.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
+                jButton_menu_commentMouseClicked(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(153, 153, 153));
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Estafadores");
-        jButton2.setActionCommand("ACTION2");
-        jButton2.setBorder(null);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton2.setMargin(new java.awt.Insets(2, 20, 2, 20));
-        jButton2.setOpaque(true);
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton_menu_estafadores.setBackground(new java.awt.Color(153, 153, 153));
+        jButton_menu_estafadores.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jButton_menu_estafadores.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_menu_estafadores.setText("Estafadores");
+        jButton_menu_estafadores.setActionCommand("MENU_ESTAFADOR");
+        jButton_menu_estafadores.setBorder(null);
+        jButton_menu_estafadores.setContentAreaFilled(false);
+        jButton_menu_estafadores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton_menu_estafadores.setMargin(new java.awt.Insets(2, 20, 2, 20));
+        jButton_menu_estafadores.setOpaque(true);
+        jButton_menu_estafadores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                jButton_menu_estafadoresMouseClicked(evt);
             }
         });
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton_menu_estafadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton_menu_estafadoresActionPerformed(evt);
             }
         });
 
@@ -210,115 +259,89 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(0, 153, 255));
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("en construcción");
-        jButton6.setActionCommand("REGISTER");
-        jButton6.setBorder(null);
-        jButton6.setContentAreaFilled(false);
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton6.setOpaque(true);
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton_menu_categoria.setBackground(new java.awt.Color(0, 153, 255));
+        jButton_menu_categoria.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton_menu_categoria.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_menu_categoria.setText("Categoría");
+        jButton_menu_categoria.setActionCommand("MENU_CATEGORIA");
+        jButton_menu_categoria.setBorder(null);
+        jButton_menu_categoria.setContentAreaFilled(false);
+        jButton_menu_categoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton_menu_categoria.setOpaque(true);
+        jButton_menu_categoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton6MouseClicked(evt);
+                jButton_menu_categoriaMouseClicked(evt);
             }
         });
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        jButton_menu_categoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                jButton_menu_categoriaActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel_menuLayout = new javax.swing.GroupLayout(jPanel_menu);
-        jPanel_menu.setLayout(jPanel_menuLayout);
-        jPanel_menuLayout.setHorizontalGroup(
-            jPanel_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_menuLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel_menu_lateralLayout = new javax.swing.GroupLayout(jPanel_menu_lateral);
+        jPanel_menu_lateral.setLayout(jPanel_menu_lateralLayout);
+        jPanel_menu_lateralLayout.setHorizontalGroup(
+            jPanel_menu_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_menu_lateralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel_menu_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton_menu_comment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton_menu_tags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                    .addGroup(jPanel_menuLayout.createSequentialGroup()
+                    .addGroup(jPanel_menu_lateralLayout.createSequentialGroup()
                         .addComponent(jLabel_home, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel_menuLayout.createSequentialGroup()
+                        .addComponent(jButton_menu_usuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton_menu_categoria, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                    .addGroup(jPanel_menu_lateralLayout.createSequentialGroup()
                         .addComponent(jLabel_home1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                        .addComponent(jButton_menu_estafadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel_menuLayout.setVerticalGroup(
-            jPanel_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_menuLayout.createSequentialGroup()
+        jPanel_menu_lateralLayout.setVerticalGroup(
+            jPanel_menu_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_menu_lateralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel_menu_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel_home, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton_menu_usuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel_home1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addGroup(jPanel_menu_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel_home1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_menu_estafadores, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addComponent(jButton_menu_comment, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_menu_tags, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_menu_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(180, Short.MAX_VALUE))
         );
 
-        jPanel_contenidoMenu.add(jPanel_menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 0, 210, 430));
+        jPanel_contenidoMenu.add(jPanel_menu_lateral, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 0, 210, 530));
 
-        jTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
-            },
-            new String [] {
-                "Title 1"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
+        jPanel_usuario.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_usuario.setBorder(javax.swing.BorderFactory.createTitledBorder("Usuarios"));
+        jPanel_usuario.setToolTipText("");
+        jPanel_usuario.setPreferredSize(new java.awt.Dimension(264, 150));
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jTable);
-
-        jPanel_contenidoMenu.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 140, 650, 240));
-
-        jPanel_botones.setBackground(new java.awt.Color(204, 255, 255));
-        jPanel_botones.setToolTipText("");
-
-        jButton_update.setText("Update");
-        jButton_update.setActionCommand("UPDATE");
-        jButton_update.addActionListener(new java.awt.event.ActionListener() {
+        jButton_update_usuario.setText("Actualizar");
+        jButton_update_usuario.setActionCommand("UPDATE_USUARIO");
+        jButton_update_usuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_updateActionPerformed(evt);
+                jButton_update_usuarioActionPerformed(evt);
             }
         });
 
-        jButton_delete.setText("Delete");
-        jButton_delete.setActionCommand("DELETE");
-        jButton_delete.addActionListener(new java.awt.event.ActionListener() {
+        jButton_delete_usuario.setText("Eliminar");
+        jButton_delete_usuario.setActionCommand("DELETE_USUARIO");
+        jButton_delete_usuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_deleteActionPerformed(evt);
+                jButton_delete_usuarioActionPerformed(evt);
             }
         });
 
@@ -340,144 +363,607 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
             }
         });
 
-        label_id_nick.setAlignment(java.awt.Label.CENTER);
         label_id_nick.setBackground(new java.awt.Color(204, 255, 255));
-        label_id_nick.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         label_id_nick.setText("Nick");
 
-        label_id_email.setAlignment(java.awt.Label.CENTER);
         label_id_email.setBackground(new java.awt.Color(204, 255, 255));
-        label_id_email.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         label_id_email.setText("Email");
 
-        label_id_nombre.setAlignment(java.awt.Label.CENTER);
         label_id_nombre.setBackground(new java.awt.Color(204, 255, 255));
-        label_id_nombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         label_id_nombre.setText("Nombre");
 
+        jtext_id.setEditable(false
+        );
         jtext_id.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtext_idActionPerformed(evt);
             }
         });
 
-        label_id.setAlignment(java.awt.Label.CENTER);
         label_id.setBackground(new java.awt.Color(204, 255, 255));
-        label_id.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         label_id.setText("ID");
 
-        javax.swing.GroupLayout jPanel_botonesLayout = new javax.swing.GroupLayout(jPanel_botones);
-        jPanel_botones.setLayout(jPanel_botonesLayout);
-        jPanel_botonesLayout.setHorizontalGroup(
-            jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_botonesLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel_usuarioLayout = new javax.swing.GroupLayout(jPanel_usuario);
+        jPanel_usuario.setLayout(jPanel_usuarioLayout);
+        jPanel_usuarioLayout.setHorizontalGroup(
+            jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(label_id, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                        .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                                .addComponent(label_id_email, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jtext_email, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                                .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(label_id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(label_id_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jtext_name, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .addComponent(jtext_id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jButton_update_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton_delete_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(21, 106, Short.MAX_VALUE))
+                    .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                        .addComponent(label_id_nick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtext_id, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addComponent(label_id_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtext_name, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addComponent(label_id_email, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtext_email, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton_update, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(21, 38, Short.MAX_VALUE))
-            .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                .addComponent(label_id_nick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jtext_nick, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jtext_nick, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
-        jPanel_botonesLayout.setVerticalGroup(
-            jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel_botonesLayout.createSequentialGroup()
+        jPanel_usuarioLayout.setVerticalGroup(
+            jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                        .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
                                 .addComponent(label_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(2, 2, 2)
-                                .addComponent(label_id_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                                .addComponent(jtext_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(label_id_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                                .addComponent(jtext_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jtext_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label_id_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtext_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel_botonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel_usuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label_id_nick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtext_nick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel_botonesLayout.createSequentialGroup()
-                        .addComponent(jButton_update)
+                    .addGroup(jPanel_usuarioLayout.createSequentialGroup()
+                        .addComponent(jButton_update_usuario)
                         .addGap(7, 7, 7)
-                        .addComponent(jButton_delete)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addComponent(jButton_delete_usuario)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         label_id_email.getAccessibleContext().setAccessibleName("");
 
-        jPanel_contenidoMenu.add(jPanel_botones, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, 290, -1));
+        jPanel_contenidoMenu.add(jPanel_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 370, 150));
 
-        jPanel_addTags.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_tabla.setForeground(new java.awt.Color(51, 153, 255));
+        java.awt.GridBagLayout jPanel_tablaLayout = new java.awt.GridBagLayout();
+        jPanel_tablaLayout.columnWidths = new int[] {0, 5, 0};
+        jPanel_tablaLayout.rowHeights = new int[] {0, 5, 0};
+        jPanel_tabla.setLayout(jPanel_tablaLayout);
 
-        jButton_enviarTag.setText("Enviar");
-        jButton_enviarTag.setActionCommand("ADDTAG");
-        jButton_enviarTag.addActionListener(new java.awt.event.ActionListener() {
+        jScrollPane2.setViewportBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        jTable.setAutoCreateRowSorter(true);
+        jTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "ID"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable.setRowHeight(20);
+        jTable.setRowMargin(2);
+        jTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTable);
+        if (jTable.getColumnModel().getColumnCount() > 0) {
+            jTable.getColumnModel().getColumn(0).setResizable(false);
+            jTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        }
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 819;
+        gridBagConstraints.ipady = 211;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 11, 18);
+        jPanel_tabla.add(jScrollPane2, gridBagConstraints);
+
+        jPanel_contenidoMenu.add(jPanel_tabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 220, 870, 260));
+
+        jPanel_estafador.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_estafador.setBorder(javax.swing.BorderFactory.createTitledBorder("Estafadores"));
+        jPanel_estafador.setToolTipText("");
+
+        jButton_updateEstafador.setText("Actualizar");
+        jButton_updateEstafador.setActionCommand("UPDATE");
+        jButton_updateEstafador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_enviarTagActionPerformed(evt);
+                jButton_updateEstafadorActionPerformed(evt);
+            }
+        });
+
+        jButton_deleteEstafador.setText("Eliminar");
+        jButton_deleteEstafador.setActionCommand("DELETE");
+        jButton_deleteEstafador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_deleteEstafadorActionPerformed(evt);
+            }
+        });
+
+        jtext_datos_3estafador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_datos_3estafadorActionPerformed(evt);
+            }
+        });
+
+        jtext_datos_2estafador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_datos_2estafadorActionPerformed(evt);
+            }
+        });
+
+        jtext_datos_1estafador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_datos_1estafadorActionPerformed(evt);
+            }
+        });
+
+        label_dato3.setBackground(new java.awt.Color(204, 255, 255));
+        label_dato3.setText("Dato 3");
+
+        label_dato2.setBackground(new java.awt.Color(204, 255, 255));
+        label_dato2.setText("Dato 2");
+
+        label_dato1.setBackground(new java.awt.Color(204, 255, 255));
+        label_dato1.setText("Dato 1");
+
+        jtext_idEstafador.setEditable(false
+        );
+        jtext_idEstafador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_idEstafadorActionPerformed(evt);
+            }
+        });
+
+        label_id_estafador.setBackground(new java.awt.Color(204, 255, 255));
+        label_id_estafador.setText("ID");
+
+        javax.swing.GroupLayout jPanel_estafadorLayout = new javax.swing.GroupLayout(jPanel_estafador);
+        jPanel_estafador.setLayout(jPanel_estafadorLayout);
+        jPanel_estafadorLayout.setHorizontalGroup(
+            jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(label_dato1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(label_id_estafador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(label_dato2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label_dato3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                        .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtext_datos_1estafador, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_idEstafador, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_datos_2estafador, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton_updateEstafador, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                            .addComponent(jButton_deleteEstafador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                        .addComponent(jtext_datos_3estafador, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel_estafadorLayout.setVerticalGroup(
+            jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtext_idEstafador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label_id_estafador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_updateEstafador, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label_dato1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_datos_1estafador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(label_dato2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_datos_2estafador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel_estafadorLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_deleteEstafador)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_estafadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtext_datos_3estafador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label_dato3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 15, Short.MAX_VALUE))
+        );
+
+        jPanel_contenidoMenu.add(jPanel_estafador, new org.netbeans.lib.awtextra.AbsoluteConstraints(228, 27, 370, 150));
+
+        jPanel_comentario.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_comentario.setBorder(javax.swing.BorderFactory.createTitledBorder("Comentarios"));
+        jPanel_comentario.setToolTipText("");
+
+        jButton_updateComment.setText("Actualizar");
+        jButton_updateComment.setActionCommand("UPDATE_COMMENT");
+        jButton_updateComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_updateCommentActionPerformed(evt);
+            }
+        });
+
+        jButton_deleteComment.setText("Eliminar");
+        jButton_deleteComment.setActionCommand("DELETE_COMMENT");
+        jButton_deleteComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_deleteCommentActionPerformed(evt);
+            }
+        });
+
+        jtext_comment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_commentActionPerformed(evt);
+            }
+        });
+
+        jtext_comment_comment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_comment_commentActionPerformed(evt);
+            }
+        });
+
+        jtext_nick_comment.setEditable(false);
+        jtext_nick_comment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_nick_commentActionPerformed(evt);
+            }
+        });
+
+        label_comment.setBackground(new java.awt.Color(204, 255, 255));
+        label_comment.setText("Dato 3");
+
+        label_comment_comment.setBackground(new java.awt.Color(204, 255, 255));
+        label_comment_comment.setText("Comentario");
+
+        label_nickPublicado.setBackground(new java.awt.Color(204, 255, 255));
+        label_nickPublicado.setText("Nick ");
+
+        jtext_idComment.setEditable(false
+        );
+        jtext_idComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_idCommentActionPerformed(evt);
+            }
+        });
+
+        label_id_comentario.setBackground(new java.awt.Color(204, 255, 255));
+        label_id_comentario.setText("ID");
+
+        javax.swing.GroupLayout jPanel_comentarioLayout = new javax.swing.GroupLayout(jPanel_comentario);
+        jPanel_comentario.setLayout(jPanel_comentarioLayout);
+        jPanel_comentarioLayout.setHorizontalGroup(
+            jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_comentarioLayout.createSequentialGroup()
+                        .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(label_nickPublicado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(label_id_comentario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(47, 47, 47))
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addComponent(label_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_comentarioLayout.createSequentialGroup()
+                        .addComponent(label_comment_comment, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtext_nick_comment, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_comment_comment, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtext_idComment, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton_updateComment, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                            .addComponent(jButton_deleteComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jtext_comment, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel_comentarioLayout.setVerticalGroup(
+            jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtext_idComment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label_id_comentario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_updateComment, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtext_nick_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label_nickPublicado, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton_deleteComment))
+                        .addGap(3, 3, 3)))
+                .addGroup(jPanel_comentarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addComponent(label_comment_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(label_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel_comentarioLayout.createSequentialGroup()
+                        .addComponent(jtext_comment_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtext_comment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        label_nickPublicado.getAccessibleContext().setAccessibleName("Nick publica");
+
+        jPanel_contenidoMenu.add(jPanel_comentario, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 370, 150));
+
+        jPanel_tag.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_tag.setBorder(javax.swing.BorderFactory.createTitledBorder("Tag"));
+        jPanel_tag.setToolTipText("");
+
+        jButton_updateTag.setText("Actualizar");
+        jButton_updateTag.setActionCommand("UPDATE_TAG");
+        jButton_updateTag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_updateTagActionPerformed(evt);
+            }
+        });
+
+        jButton_deleteTag.setText("Eliminar");
+        jButton_deleteTag.setActionCommand("DELETE_TAG");
+        jButton_deleteTag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_deleteTagActionPerformed(evt);
+            }
+        });
+
+        label_nombreTag.setBackground(new java.awt.Color(204, 255, 255));
+        label_nombreTag.setText("Valor");
+
+        jtext_idTag.setEditable(false
+        );
+        jtext_idTag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_idTagActionPerformed(evt);
+            }
+        });
+
+        label_id_tag.setBackground(new java.awt.Color(204, 255, 255));
+        label_id_tag.setText("ID");
+
+        jButton_enviarTags.setText("Insertar");
+        jButton_enviarTags.setActionCommand("INSERT_TAG");
+        jButton_enviarTags.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_enviarTagsActionPerformed(evt);
+            }
+        });
+
+        jtext_valor_tag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_valor_tagActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel_tagLayout = new javax.swing.GroupLayout(jPanel_tag);
+        jPanel_tag.setLayout(jPanel_tagLayout);
+        jPanel_tagLayout.setHorizontalGroup(
+            jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_tagLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(label_nombreTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(label_id_tag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_tagLayout.createSequentialGroup()
+                        .addComponent(jtext_idTag, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 14, Short.MAX_VALUE))
+                    .addComponent(jtext_valor_tag))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton_enviarTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton_updateTag, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                    .addComponent(jButton_deleteTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel_tagLayout.setVerticalGroup(
+            jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_tagLayout.createSequentialGroup()
+                .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label_id_tag, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_updateTag, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel_tagLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jtext_idTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel_tagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtext_valor_tag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton_deleteTag))
+                    .addComponent(label_nombreTag, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton_enviarTags)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        jPanel_contenidoMenu.add(jPanel_tag, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, -1, 140));
+
+        jPanel_categoria.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel_categoria.setBorder(javax.swing.BorderFactory.createTitledBorder("Categoria"));
+        jPanel_categoria.setToolTipText("");
+
+        jButton_updateCategory.setText("Actualizar");
+        jButton_updateCategory.setActionCommand("UPDATE_CATEGORIA");
+        jButton_updateCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_updateCategoryActionPerformed(evt);
+            }
+        });
+
+        jButton_deleteCategory.setText("Eliminar");
+        jButton_deleteCategory.setActionCommand("DELETE_CATEGORIA");
+        jButton_deleteCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_deleteCategoryActionPerformed(evt);
+            }
+        });
+
+        label_nombreCategory.setBackground(new java.awt.Color(204, 255, 255));
+        label_nombreCategory.setText("Valor");
+
+        jtext_idCategoria.setEditable(false
+        );
+        jtext_idCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_idCategoriaActionPerformed(evt);
+            }
+        });
+
+        label_id_Categoria.setBackground(new java.awt.Color(204, 255, 255));
+        label_id_Categoria.setText("ID");
+
+        jButton_insertCategory.setText("Insertar");
+        jButton_insertCategory.setActionCommand("INSERT_CATEGORIA");
+        jButton_insertCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_insertCategoryActionPerformed(evt);
+            }
+        });
+
+        jtext_valor_category.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtext_valor_categoryActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel_categoriaLayout = new javax.swing.GroupLayout(jPanel_categoria);
+        jPanel_categoria.setLayout(jPanel_categoriaLayout);
+        jPanel_categoriaLayout.setHorizontalGroup(
+            jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_categoriaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(label_nombreCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(label_id_Categoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_categoriaLayout.createSequentialGroup()
+                        .addComponent(jtext_idCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 14, Short.MAX_VALUE))
+                    .addComponent(jtext_valor_category))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton_insertCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton_updateCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                    .addComponent(jButton_deleteCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel_categoriaLayout.setVerticalGroup(
+            jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_categoriaLayout.createSequentialGroup()
+                .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label_id_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_updateCategory, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel_categoriaLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jtext_idCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel_categoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtext_valor_category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton_deleteCategory))
+                    .addComponent(label_nombreCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton_insertCategory)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        jPanel_contenidoMenu.add(jPanel_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, -1, 140));
+
+        jText_filter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jText_filterKeyReleased(evt);
             }
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Nombre Tag");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("BUSCAR");
 
-        jTextField_newTag.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_newTagActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel_addTagsLayout = new javax.swing.GroupLayout(jPanel_addTags);
-        jPanel_addTags.setLayout(jPanel_addTagsLayout);
-        jPanel_addTagsLayout.setHorizontalGroup(
-            jPanel_addTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_addTagsLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel_filterLayout = new javax.swing.GroupLayout(jPanel_filter);
+        jPanel_filter.setLayout(jPanel_filterLayout);
+        jPanel_filterLayout.setHorizontalGroup(
+            jPanel_filterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_filterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField_newTag, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton_enviarTag, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jText_filter, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
-        jPanel_addTagsLayout.setVerticalGroup(
-            jPanel_addTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_addTagsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel_addTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField_newTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton_enviarTag))
-                .addContainerGap(16, Short.MAX_VALUE))
+        jPanel_filterLayout.setVerticalGroup(
+            jPanel_filterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_filterLayout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(jPanel_filterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_filter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap())
         );
 
-        jPanel_contenidoMenu.add(jPanel_addTags, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 20, 250, 50));
+        jPanel_contenidoMenu.add(jPanel_filter, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 10, 350, 50));
 
-        getContentPane().add(jPanel_contenidoMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(-1, 60, 970, 420));
+        getContentPane().add(jPanel_contenidoMenu, java.awt.BorderLayout.CENTER);
 
         jPanel_superiorMenu.setBackground(new java.awt.Color(0, 102, 204));
 
@@ -527,9 +1013,9 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
             .addGroup(jPanel_superiorMenuLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 693, Short.MAX_VALUE)
-                .addComponent(jTextField_saludo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 845, Short.MAX_VALUE)
+                .addComponent(jTextField_saludo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(jButton_cerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -544,7 +1030,7 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel_superiorMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 60));
+        getContentPane().add(jPanel_superiorMenu, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -557,50 +1043,50 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField_saludoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton_menu_usuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_menu_usuariosActionPerformed
         // TODO add your handling code here:
-        jButton1.setActionCommand("ACTION1");
-    }//GEN-LAST:event_jButton1ActionPerformed
+        jButton_menu_usuarios.setActionCommand(MENU_USUARIO);
+    }//GEN-LAST:event_jButton_menu_usuariosActionPerformed
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        System.out.println("pulso 1");
-    }//GEN-LAST:event_jButton1MouseClicked
+    private void jButton_menu_usuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_menu_usuariosMouseClicked
+        System.out.println("jButton_menu_usuariosMouseClicked");
+    }//GEN-LAST:event_jButton_menu_usuariosMouseClicked
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButton_menu_tagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_menu_tagsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jButton_menu_tagsActionPerformed
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    private void jButton_menu_commentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_menu_commentMouseClicked
         // TODO add your handling code here:
         System.out.println("pulso 3");
-    }//GEN-LAST:event_jButton3MouseClicked
+    }//GEN-LAST:event_jButton_menu_commentMouseClicked
 
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+    private void jButton_menu_tagsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_menu_tagsMouseClicked
         // TODO add your handling code here:
         System.out.println("pulso 4");
-    }//GEN-LAST:event_jButton4MouseClicked
+    }//GEN-LAST:event_jButton_menu_tagsMouseClicked
 
-    private void jPanel_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel_menuMouseClicked
+    private void jPanel_menu_lateralMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel_menu_lateralMouseClicked
         // TODO add your handling code here:
        // this.jPanel_menu.setVisible(false);
-    }//GEN-LAST:event_jPanel_menuMouseClicked
+    }//GEN-LAST:event_jPanel_menu_lateralMouseClicked
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void jButton_menu_estafadoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_menu_estafadoresMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2MouseClicked
+    }//GEN-LAST:event_jButton_menu_estafadoresMouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton_menu_estafadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_menu_estafadoresActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton_menu_estafadoresActionPerformed
 
     int x=210;
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
           if(  jToggleButton1.isSelected()){
-              jPanel_menu.setVisible(false);
-              jPanel_menu.setSize(0, 0);
+              jPanel_menu_lateral.setVisible(false);
+              jPanel_menu_lateral.setSize(0, 0);
       }else{
-              jPanel_menu.setVisible(true);
-              jPanel_menu.setSize(160, 430);
+              jPanel_menu_lateral.setVisible(true);
+              jPanel_menu_lateral.setSize(160, 430);
       }
     }//GEN-LAST:event_jToggleButton1MouseClicked
 
@@ -620,29 +1106,75 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
         // TODO add your handling code here:
     }//GEN-LAST:event_jtext_idActionPerformed
 
-    private void jButton_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deleteActionPerformed
+    private void jButton_delete_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_delete_usuarioActionPerformed
+            String x;
+            String id=jtext_id.getText().toString();
+            String name=jtext_name.getText().toString();
+            String nick=jtext_nick.getText().toString();
+            String email=jtext_email.getText().toString();
+            x=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email; 
+            setMensaje(x);
+       
+    }//GEN-LAST:event_jButton_delete_usuarioActionPerformed
 
-       String id=jtext_id.getText().toString();
-       String name=jtext_name.getText().toString();
-       String nick=jtext_nick.getText().toString();
-       String email=jtext_email.getText().toString();
- 
-   //   System.out.println(id+" PUSLO "+  id +"-"+name+"  -"+email+" "+nick);
-       // jButton_enviar.setActionCommand("DELETE");
-  //  this.mensaje=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email;
-
-        
-    }//GEN-LAST:event_jButton_deleteActionPerformed
-
+    // mira q tabla ha sido seleccionado -- coje los datos y lo mete en el cuadro superior
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
         // TODO add your handling code here:
         int selectedRow=jTable.getSelectedRow();
         String id= defaultTableModel.getValueAt(selectedRow, 0).toString();
-        jtext_id.setText(id);
-        jtext_name.setText(defaultTableModel.getValueAt(selectedRow, 2).toString());
-        jtext_email.setText(defaultTableModel.getValueAt(selectedRow, 3).toString());
-        jtext_nick.setText(defaultTableModel.getValueAt(selectedRow, 1).toString());
-        System.out.println("jTable.getSelectedRow() "+id);
+        
+        switch(jTable.getName()){
+            case TABLA_USUARIO:
+                jtext_id.setText(id);
+                jtext_name.setText(defaultTableModel.getValueAt(selectedRow, 2).toString());
+                jtext_email.setText(defaultTableModel.getValueAt(selectedRow, 3).toString());
+                jtext_nick.setText(defaultTableModel.getValueAt(selectedRow, 1).toString());
+                break;
+            case TABLA_ESTAFADOR:
+                ocultarCamposestafador(false);
+                jtext_idEstafador.setText(id);
+                String nombreEstafador, urlestafador, tel_estafador, email_estafador;
+                String[] s=defaultTableModel.getValueAt(selectedRow, 1).toString().split(",");
+                
+                if(s.length==1 && s[0].equals("sin_datos")){
+                      jtext_datos_1estafador.setText("No consta ningun dato");
+                }else if(s.length==2){
+                     jtext_datos_1estafador.setText(s[0]);
+                     label_dato2.setVisible(true);
+                     jtext_datos_2estafador.setVisible(true);
+                     jtext_datos_2estafador.setText(s[1]);
+                }else if(s.length==3){
+                     ocultarCamposestafador(true);
+                     jtext_datos_1estafador.setText(s[0]);
+                     jtext_datos_2estafador.setText(s[1]);
+                     jtext_datos_3estafador.setText(s[2]);
+                }else if(s.length==4){
+                    ocultarCamposestafador(true);
+                     jtext_datos_1estafador.setText(s[0]);
+                     jtext_datos_2estafador.setText(s[1]);
+                     jtext_datos_3estafador.setText(s[2]);
+                }else{
+                     jtext_datos_1estafador.setText(s[0]);
+                }
+                break;
+            case TABLA_COMENTARIOS:
+                jtext_idComment.setText(id);
+                jtext_nick_comment.setText(defaultTableModel.getValueAt(selectedRow, 1).toString());
+                jtext_comment_comment.setText(defaultTableModel.getValueAt(selectedRow, 2).toString());
+                break;
+             case TABLA_TAGS:
+                  jtext_idTag.setText(id);
+                  jtext_valor_tag.setText(defaultTableModel.getValueAt(selectedRow, 1).toString()); 
+                break; 
+            case TABLA_CATEGORIA:
+                  jtext_idCategoria.setText(id);
+                  jtext_valor_category.setText(defaultTableModel.getValueAt(selectedRow, 1).toString()); 
+                break;     
+             default:
+                    JOptionPane.showMessageDialog(null, "Ha surgido un error."); 
+        }
+
+     
     }//GEN-LAST:event_jTableMouseClicked
 
     private void jtext_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_nameActionPerformed
@@ -657,26 +1189,122 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
         // TODO add your handling code here:
     }//GEN-LAST:event_jtext_emailActionPerformed
 
-    private void jButton_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_updateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton_updateActionPerformed
+    private void jButton_update_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_update_usuarioActionPerformed
+           String x;
+            String id=jtext_id.getText().toString();
+            String name=jtext_name.getText().toString();
+            String nick=jtext_nick.getText().toString();
+            String email=jtext_email.getText().toString();
+            x=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email; 
+            setMensaje(x);
+    }//GEN-LAST:event_jButton_update_usuarioActionPerformed
 
-    private void jTextField_newTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_newTagActionPerformed
+    private void jtext_valor_tagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_valor_tagActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField_newTagActionPerformed
+    }//GEN-LAST:event_jtext_valor_tagActionPerformed
 
-    private void jButton_enviarTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_enviarTagActionPerformed
+    private void jButton_enviarTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_enviarTagsActionPerformed
         // TODO add your handling code here:
-        this.mensaje=jTextField_newTag.getText().toString();
-    }//GEN-LAST:event_jButton_enviarTagActionPerformed
+        this.mensaje=jtext_valor_tag.getText().toString();
+    }//GEN-LAST:event_jButton_enviarTagsActionPerformed
 
-    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+    private void jButton_menu_categoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_menu_categoriaMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6MouseClicked
+    }//GEN-LAST:event_jButton_menu_categoriaMouseClicked
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButton_menu_categoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_menu_categoriaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_jButton_menu_categoriaActionPerformed
+
+    private void jButton_updateEstafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_updateEstafadorActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton_updateEstafadorActionPerformed
+
+    private void jButton_deleteEstafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deleteEstafadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_deleteEstafadorActionPerformed
+
+    private void jtext_datos_3estafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_datos_3estafadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_datos_3estafadorActionPerformed
+
+    private void jtext_datos_2estafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_datos_2estafadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_datos_2estafadorActionPerformed
+
+    private void jtext_datos_1estafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_datos_1estafadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_datos_1estafadorActionPerformed
+
+    private void jtext_idEstafadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_idEstafadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_idEstafadorActionPerformed
+
+    private void jButton_updateCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_updateCommentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_updateCommentActionPerformed
+
+    private void jButton_deleteCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deleteCommentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_deleteCommentActionPerformed
+
+    private void jtext_commentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_commentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_commentActionPerformed
+
+    private void jtext_comment_commentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_comment_commentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_comment_commentActionPerformed
+
+    private void jtext_nick_commentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_nick_commentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_nick_commentActionPerformed
+
+    private void jtext_idCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_idCommentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_idCommentActionPerformed
+
+    private void jButton_updateTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_updateTagActionPerformed
+        // TODO add your handling code here:
+      jButton_updateTag.setActionCommand(UPDATE_TAG);
+    }//GEN-LAST:event_jButton_updateTagActionPerformed
+
+    private void jButton_deleteTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deleteTagActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_deleteTagActionPerformed
+
+    private void jtext_idTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_idTagActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_idTagActionPerformed
+
+    private void jButton_updateCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_updateCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_updateCategoryActionPerformed
+
+    private void jButton_deleteCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deleteCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_deleteCategoryActionPerformed
+
+    private void jtext_idCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_idCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_idCategoriaActionPerformed
+
+    private void jButton_insertCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_insertCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_insertCategoryActionPerformed
+
+    private void jtext_valor_categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtext_valor_categoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtext_valor_categoryActionPerformed
+
+    //Para el filtro de los datos
+    private void jText_filterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jText_filterKeyReleased
+        String search=jText_filter.getText();
+        TableRowSorter tr=new TableRowSorter(defaultTableModel);
+        jTable.setRowSorter(tr);   
+        tr.setRowFilter(RowFilter.regexFilter(search));// ,0 column 0
+    }//GEN-LAST:event_jText_filterKeyReleased
 
     /**
      * @param args the command line arguments
@@ -704,10 +1332,7 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
             java.util.logging.Logger.getLogger(VistaJFrame_menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+   
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -717,220 +1342,270 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton_cerrar;
-    private javax.swing.JButton jButton_delete;
-    public javax.swing.JButton jButton_enviarTag;
-    private javax.swing.JButton jButton_update;
+    private javax.swing.JButton jButton_deleteCategory;
+    private javax.swing.JButton jButton_deleteComment;
+    private javax.swing.JButton jButton_deleteEstafador;
+    private javax.swing.JButton jButton_deleteTag;
+    private javax.swing.JButton jButton_delete_usuario;
+    public javax.swing.JButton jButton_enviarTags;
+    public javax.swing.JButton jButton_insertCategory;
+    private javax.swing.JButton jButton_menu_categoria;
+    private javax.swing.JButton jButton_menu_comment;
+    private javax.swing.JButton jButton_menu_estafadores;
+    private javax.swing.JButton jButton_menu_tags;
+    private javax.swing.JButton jButton_menu_usuarios;
+    private javax.swing.JButton jButton_updateCategory;
+    private javax.swing.JButton jButton_updateComment;
+    private javax.swing.JButton jButton_updateEstafador;
+    private javax.swing.JButton jButton_updateTag;
+    private javax.swing.JButton jButton_update_usuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_home;
     private javax.swing.JLabel jLabel_home1;
-    private javax.swing.JPanel jPanel_addTags;
-    private javax.swing.JPanel jPanel_botones;
+    private javax.swing.JPanel jPanel_categoria;
+    private javax.swing.JPanel jPanel_comentario;
     private javax.swing.JPanel jPanel_contenidoMenu;
-    private javax.swing.JPanel jPanel_menu;
+    private javax.swing.JPanel jPanel_estafador;
+    private javax.swing.JPanel jPanel_filter;
+    private javax.swing.JPanel jPanel_menu_lateral;
     private javax.swing.JPanel jPanel_superiorMenu;
+    private javax.swing.JPanel jPanel_tabla;
+    private javax.swing.JPanel jPanel_tag;
+    private javax.swing.JPanel jPanel_usuario;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable;
-    public javax.swing.JTextField jTextField_newTag;
     private javax.swing.JTextField jTextField_saludo;
+    private javax.swing.JTextField jText_filter;
     private javax.swing.JToggleButton jToggleButton1;
+    private java.awt.TextField jtext_comment;
+    private java.awt.TextField jtext_comment_comment;
+    private java.awt.TextField jtext_datos_1estafador;
+    private java.awt.TextField jtext_datos_2estafador;
+    private java.awt.TextField jtext_datos_3estafador;
     private java.awt.TextField jtext_email;
     private java.awt.TextField jtext_id;
+    private java.awt.TextField jtext_idCategoria;
+    private java.awt.TextField jtext_idComment;
+    private java.awt.TextField jtext_idEstafador;
+    private java.awt.TextField jtext_idTag;
     private java.awt.TextField jtext_name;
     private java.awt.TextField jtext_nick;
+    private java.awt.TextField jtext_nick_comment;
+    public javax.swing.JTextField jtext_valor_category;
+    public javax.swing.JTextField jtext_valor_tag;
+    private java.awt.Label label_comment;
+    private java.awt.Label label_comment_comment;
+    private java.awt.Label label_dato1;
+    private java.awt.Label label_dato2;
+    private java.awt.Label label_dato3;
     private java.awt.Label label_id;
+    private java.awt.Label label_id_Categoria;
+    private java.awt.Label label_id_comentario;
     private java.awt.Label label_id_email;
+    private java.awt.Label label_id_estafador;
     private java.awt.Label label_id_nick;
     private java.awt.Label label_id_nombre;
+    private java.awt.Label label_id_tag;
+    private java.awt.Label label_nickPublicado;
+    private java.awt.Label label_nombreCategory;
+    private java.awt.Label label_nombreTag;
     // End of variables declaration//GEN-END:variables
 
-// OVERWRITE M´S
-    
+   
     @Override
     public void mostrarRespuesta(String mensaje) { 
         
-//         int rows = jTable.getRowCount();
-// for(int i=0;i<rows;i++)
-// ((DefaultTableModel)jTable.setModel(defaultTableModel)).removeRow(i);
-        
+        while (defaultTableModel.getRowCount()>0) {
+           defaultTableModel.removeRow(0); 
+        }
+       
         defaultTableModel.setRowCount(0);
         String nombreUsuario;
         String [] str=mensaje.split(SEPARADOR);
         String strProtocolo=str[0];
-          jPanel_botones.setVisible(false);
-          jPanel_addTags.setVisible(false);
-        System.out.println("mostrarRespuesta FRAME MENU "+mensaje);
+        
+        jPanel_usuario.setVisible(false);
+        jPanel_estafador.setVisible(false);
+        jPanel_comentario.setVisible(false);
+        jPanel_tag.setVisible(false);
+        jPanel_categoria.setVisible(false);
+        
+        jPanel_filter.setVisible(true);
+        jPanel_tabla.setVisible(true);
+        
+        System.out.println("VM mostrarRespuesta server "+mensaje);
         switch (strProtocolo) {
             case LOGIN_OK:
+                jPanel_tabla.setVisible(false);
                 nombreUsuario=str[1];
-               // System.out.println("**vista frame recibido del server  "+nombreUsuario);
                 jTextField_saludo.setText("Bienvenido "+nombreUsuario);// o tengo e poner el nick??
                 break;
             case CHECKBOX_REGISTRO_TRUE:
+                jPanel_tabla.setVisible(false);
                 nombreUsuario=str[1];
                 jTextField_saludo.setText("Bienvenido "+nombreUsuario);
                 break;
-            case ACTION1:   //usuarios    
-                resetTag();
-                jPanel_botones.setVisible(true);
+            case MENU_USUARIO:   //usuarios    
+                usuarioDao.resetUsuario(jtext_id, jtext_name,jtext_nick,jtext_email  );
+                jPanel_usuario.setVisible(true);
+                jTable.setName(TABLA_USUARIO);
                 this.list_usuarios=new ArrayList<>();
-                setModeloUsuarios();
-                rellenarUsarios(mensaje);
-                setDatosUsuarios();
-                break;
-            case ACTION2:  //estafadores 
-                mostrartable(true); 
-                 //jPanel_botones.setVisible(false);
-                setModeloEStafador();
-                rellenarEstafador(mensaje); 
-                setEstafdor();
+                cabecera=new String[]{"ID","NICK", "NOMBRE" , "EMAIL"};
+               
+                setModeloTabla(this.defaultTableModel, this.jTable,cabecera );
+                this.list_usuarios = (ArrayList<Usuario>) usuarioDao.rellenarUsarios(mensaje);
+                usuarioDao.setDatosUsuarios(this.defaultTableModel, this.jTable, this.list_usuarios);    
                 break; 
-            case ACTION3: 
+            case INSERT_USUARIO: // add alguna tag
+                JOptionPane.showMessageDialog(null, MENSAJE_INFORMACION,
+                mensaje.substring(7), JOptionPane.INFORMATION_MESSAGE);
+                break;    
+            case DELETE_USUARIO:  // 
+                JOptionPane.showMessageDialog(null, str[2]);
+                break;               
+            case UPDATE_USUARIO: // add alguna tag
+                 JOptionPane.showMessageDialog(null, str[2]);
+                break;
+             
+                //MENU ESTAFADOR CASES
+            case MENU_ESTAFADOR:  //estafadores 
+                 mostrartable(true);
+                 estafadorMenu.resetEstafador( jtext_idEstafador, jtext_datos_1estafador, jtext_datos_2estafador, jtext_datos_3estafador);
+                 jTable.setName(TABLA_ESTAFADOR);
+                 jPanel_estafador.setVisible(true);
+                 
+                 this.list_estafadores=new ArrayList<>();
+                 cabecera=new String[]{"ID", "Datos del estafador"};
+                 setModeloTabla(this.defaultTableModel, this.jTable,cabecera );
+                 this.list_estafadores=(ArrayList<Estafador>) estafadorMenu.rellenarTabla(mensaje); 
+                 estafadorMenu.modeloTabla(this.defaultTableModel, this.jTable, this.list_estafadores);
+                break; 
+            case MENU_COMENTARIO: 
+                mostrartable(true);  
+                comentarioMenu.resetComentario(jtext_idComment, jtext_nick_comment, 
+                        jtext_comment_comment, jtext_comment);
+                jTable.setName(TABLA_COMENTARIOS);
+                jPanel_comentario.setVisible(true);
+                
+                this.list_comments=new ArrayList<>();
+                cabecera=new String[]{ "ID",  "NICK-COMMENT","CONTENIDO"};
+                setModeloTabla(this.defaultTableModel, this.jTable, cabecera);
+                this.list_comments=(ArrayList<Comentario>) comentarioMenu.rellenarComments(mensaje);
+                comentarioMenu.setComments(this.defaultTableModel, this.jTable, this.list_comments);
+                break;
+              case DELETE_COMMENT:  // DELETE_TAG:OK/NOTOK:respuesta_server
+                JOptionPane.showMessageDialog(null, str[2]);
+                break;     
+            case UPDATE_COMMENT: //UPDATE_TAG:OK/NOTOK:respuesta_server
+                 JOptionPane.showMessageDialog(null, str[2]); 
+                 break;
+                
+                
+                
+             
+                //MENU TAG cases
+            case MENU_TAG:  // add alguna tag
+               // resetLogin(); // cambiar nombre
+                tagMenu.resetTag(jtext_idTag,jtext_valor_tag);
+                jPanel_tag.setVisible(true);
+                cabecera=new String[]{"ID","VALOR"};
                 mostrartable(true);
-               // jPanel_botones.setVisible(false);
-                setModeloComments();
-                rellenarComments(mensaje);
-                setComments();
+                jTable.setName(TABLA_TAGS);
+                setModeloTabla(this.defaultTableModel, this.jTable, cabecera);
+                this.list_tags=(ArrayList<Tag>) tagMenu.rellenarTabla(mensaje);
+                tagMenu.modeloTabla(this.defaultTableModel, this.jTable, this.list_tags);
                 break;
-                
-            case ACTION4:  // add alguna tag
-                //jPanel_botones.setVisible(false);
-                resetLogin(); // cambiar nombre
-                jPanel_addTags.setVisible(true);
-                System.out.println("MENS "+mensaje);
+            case INSERT_TAG: // (INSERT_TAG:OK/NOT_OK:Tag insertada
+                JOptionPane.showMessageDialog(null, str[2]);
+                tagMenu.resetTag(jtext_idTag,jtext_valor_tag);
+                //volver rellenar la tabla
+                jPanel_tag.setVisible(true);
+                cabecera=new String[]{"ID","VALOR"};
                 mostrartable(true);
-                setModeloTags();
-                rellenarTags(mensaje);
-                mostrarEtiketas();
+                setModeloTabla(this.defaultTableModel, this.jTable, cabecera);
+                tagMenu.modeloTabla(this.defaultTableModel, this.jTable, this.list_tags);
+                break;    
+             case DELETE_TAG:  // DELETE_TAG:OK/NOTOK:respuesta_server
+                JOptionPane.showMessageDialog(null, str[2]);
+                break;     
+            case UPDATE_TAG: //UPDATE_TAG:OK/NOTOK:respuesta_server
+                 JOptionPane.showMessageDialog(null, str[2]);
                 break;
                 
-            case ACTION5:
-                jPanel_addTags.setVisible(false);
-                System.out.println("....."+ACTION5);
+                
+            case MENU_CATEGORIA:
+                categoriaMenu.resetCategoria(jtext_idCategoria,jtext_valor_category);
+                jPanel_categoria.setVisible(true);
+                cabecera=new String[]{"ID","VALOR"};
+                mostrartable(true);
+                this.jTable.setName(TABLA_CATEGORIA);
+                setModeloTabla(this.defaultTableModel, this.jTable, cabecera);
+                this.list_category= (ArrayList<Categoria>) categoriaMenu.rellenarTabla(mensaje);
+                categoriaMenu.modeloTabla(this.defaultTableModel, this.jTable, this.list_category);
+                System.out.println("....."+MENU_CATEGORIA);
+                break;
+             case INSERT_CATEGORIA: // (INSERT_CATEGORIA:OK/NOT_OK:Tag insertada
+                JOptionPane.showMessageDialog(null, str[2]);
+                categoriaMenu.resetCategoria(jtext_idCategoria,jtext_valor_category);
+                //volver rellenar la tabla
+                jPanel_categoria.setVisible(true);
+                cabecera=new String[]{"ID","VALOR"};
+                mostrartable(true);
+                setModeloTabla(this.defaultTableModel, this.jTable, cabecera);
+                categoriaMenu.modeloTabla(this.defaultTableModel, this.jTable, this.list_category);
+                break;     
+            case DELETE_CATEGORIA:  // DELETE_CATEGORIA:OK/NOTOK:respuesta_server
+                JOptionPane.showMessageDialog(null, str[2]);
                 break;
                 
-            case DELETE:  // add alguna tag
-                JOptionPane.showMessageDialog(null, mensaje.substring(7),
-                mensaje.substring(7), JOptionPane.INFORMATION_MESSAGE);
+            case UPDATE_CATEGORIA: //UPDATE_CATEGORIA:OK/NOTOK:respuesta_server
+                 JOptionPane.showMessageDialog(null, str[2]);
                 break;
                 
-            case UPDATE: // add alguna tag
-                JOptionPane.showMessageDialog(null, MENSAJE_INFORMACION,
-                mensaje.substring(7), JOptionPane.INFORMATION_MESSAGE);
-                break;
-                
-            case INSERT: // add alguna tag
-                JOptionPane.showMessageDialog(null, MENSAJE_INFORMACION,
-                mensaje.substring(7), JOptionPane.INFORMATION_MESSAGE);
-                break;
-                
-            case ADDTAG: // add alguna tag
-                JOptionPane.showMessageDialog(null, MENSAJE_INFORMACION,
-                mensaje.substring(7), JOptionPane.INFORMATION_MESSAGE);
-                break;
+           
             default:
                 System.err.println("ERROR vista Menu->default: " );
         }     
     }
-   
+  
     public void mostrartable(boolean visble){
          jTable.setVisible(visble);
-         jTable.getTableHeader().setVisible(visble);
+         jTable.getTableHeader().setVisible(visble); 
+  
     }
-
-//-------------------new pruebas
-    private void setModeloUsuarios(){
-        String[] cabecera={"codigo","nick", "nombre" , "email"};
-        defaultTableModel.setColumnIdentifiers(cabecera);
-        jTable.setModel(defaultTableModel);
-    }
-    
-     private void setModeloEStafador(){
-        String[] cabecera={"ID", "Datos del estafador"};
-        defaultTableModel.setColumnIdentifiers(cabecera);
-        jTable.setModel(defaultTableModel);
-    }
-     private void setModeloComments(){
-        String[] cabecera={"Comentarios publicos", "nick", "ID"};
-        defaultTableModel.setColumnIdentifiers(cabecera);
-        jTable.setModel(defaultTableModel);
-    }
-        private void setModeloTags(){
-        String[] cabecera={"ID","Valor"};
-        defaultTableModel.setColumnIdentifiers(cabecera);
-        jTable.setModel(defaultTableModel);
-    }
+    public void setModeloTabla(DefaultTableModel defaultTableModel, JTable jTable, String[] cabecera) {
+        JTableHeader th;
+        th = this.jTable.getTableHeader();
+        th.setReorderingAllowed(false);// probando
      
-    
-    private void setDatosUsuarios(){
-       // llenarLista();
-        Object [] datos=new Object[defaultTableModel.getColumnCount()];
-        int i=1;
-        for(Usuario s:list_usuarios ){
-                datos[0]=s.getCod_usuario();
-                 datos[1]=s.getNombre_usuario();
-                  datos[2]=s.getEmail();
-                   datos[3]=s.getNick();
-                  i++;
-            defaultTableModel.addRow(datos);
-        }
-        jTable.setModel(defaultTableModel);
-    }
-    
-        private void setEstafdor(){
-        Object [] datos=new Object[defaultTableModel.getColumnCount()];
-        int i=1;
-           for(Estafador s:list_estafadores ){
-                datos[0]=s.getId();
-                 datos[1]=s.getDatos();
-                  i++;
-            defaultTableModel.addRow(datos);
-        }
-        jTable.setModel(defaultTableModel);
-    }
-    
-   private void setComments(){
-        Object [] datos=new Object[defaultTableModel.getColumnCount()];
-        int i=1;
-           for(Comentario c:list_comments ){
-                datos[0]=c.getId();
-                 datos[1]=c.getComentario();
-                 datos[2]=c.getNick();
-                  i++;
-            defaultTableModel.addRow(datos);
-        }
-        jTable.setModel(defaultTableModel);
-    }
-    
-   private void mostrarEtiketas(){
-        Object [] datos=new Object[defaultTableModel.getColumnCount()];
-        int i=1;
-           for(Etiketa c:list_tags ){
-                datos[0]=c.getId();
-                 datos[1]=c.getValor();
-                  i++;
-            defaultTableModel.addRow(datos);
-        }
-        jTable.setModel(defaultTableModel);
-    }
+         
+        Font fuente = new Font("Verdana", Font.BOLD, 12);
+        th.setFont(fuente);
+        th.setBackground(Color.blue);
+        th.setSize(100, 40);
+        this.jTable.getTableHeader().setForeground(Color.white);
+        this.defaultTableModel.setColumnIdentifiers(cabecera);        
+        this.jTable.setModel(defaultTableModel);
         
-    //----------------FIN P
+        
+//     solo imprime
+//this.jTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//    @Override
+//    public void valueChanged(ListSelectionEvent e) {
+//        String nombre = jTable.getValueAt(jTable.getSelectedRow(), 0).toString();
+//        String semestre = jTable.getValueAt(jTable.getSelectedRow(), 1).toString();
+//        String especialidad = "water";//jTable.getValueAt(jTable.getSelectedRow(), 2).toString();
+//        System.out.println("Nombre: " + nombre + " | Semestre: " + semestre + " | Especialidad: " + especialidad);
+//    }
+//});
+   }
+
+   
     @Override
     public void resetLogin() {
-            jtext_id.setText("");
-           jtext_name.setText("");
-            jtext_nick.setText("");
-            jtext_email.setText("");
-    }
-    
-     public void resetTag() {
-            jTextField_newTag.setText("");
+
     }
 
     @Override
@@ -940,44 +1615,93 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
 
     @Override
     public void hacerVisible() {
-        setVisible(true);
-      
-       
+        setVisible(true);  
     }
     
     @Override
     public void inicializar(){
-       jButton1.addActionListener(controlador);
-        jButton2.addActionListener(controlador);
-        jButton3.addActionListener(controlador);
-        jButton4.addActionListener(controlador);
+        jButton_menu_usuarios.addActionListener(controlador);
+        jButton_menu_estafadores.addActionListener(controlador);
+        jButton_menu_comment.addActionListener(controlador);
+        jButton_menu_tags.addActionListener(controlador);
+        jButton_menu_categoria.addActionListener(controlador);
+        
         jButton5.addActionListener(controlador);
-        jButton_delete.addActionListener(controlador);
-        jButton_update.addActionListener(controlador);
-        jButton_enviarTag.addActionListener(controlador); 
+        jButton_delete_usuario.addActionListener(controlador);
+        jButton_update_usuario.addActionListener(controlador);
+        
+        jButton_updateComment.addActionListener(controlador);
+        jButton_deleteComment.addActionListener(controlador);
+        
+        jButton_enviarTags.addActionListener(controlador); 
+        jButton_updateTag.addActionListener(controlador);
+        jButton_deleteTag.addActionListener(controlador);
+        
+        jButton_insertCategory.addActionListener(controlador); 
+        jButton_updateCategory.addActionListener(controlador);
+        jButton_deleteCategory.addActionListener(controlador); 
+     
+    }
+
+    public String getMensaje() {
+       return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 
    
     @Override
     public String getMensajeAEnviar() {
-        this.mensaje="";
-        if(jtext_id.getText().toString().isEmpty()){
-            if(!jTextField_newTag.getText().isEmpty()){
-                this.mensaje=jTextField_newTag.getText().toString();
-            }
-        }else{
-             String id=jtext_id.getText().toString();
-            String name=jtext_name.getText().toString();
-            String nick=jtext_nick.getText().toString();
-            String email=jtext_email.getText().toString();
-            this.mensaje=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email; 
-        }
-      
+    this.mensaje="";
+        switch(jTable.getName()){
+            case TABLA_USUARIO:
+                String id=jtext_id.getText().toString();
+                String name=jtext_name.getText().toString();
+                String nick=jtext_nick.getText().toString();
+                String email=jtext_email.getText().toString();
+                this.mensaje=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email; 
+                break;
+             case TABLA_ESTAFADOR:
+//                 String id=jtext_id.getText().toString();
+//                 String name=jtext_name.getText().toString();
+//                 String nick=jtext_nick.getText().toString();
+//                 String email=jtext_email.getText().toString();
+//            this.mensaje=id+SEPARADOR+name+SEPARADOR+nick+SEPARADOR+email; 
+                break; 
+             case TABLA_TAGS:
+                 String idTag=jtext_idTag.getText().toString();
+                 String tagName=jtext_valor_tag.getText().toString();
+                 if(!idTag.isEmpty())// si id !isEmpty-> update
+                     this.mensaje=idTag+SEPARADOR+tagName;
+                 else{//= un insert
+                      this.mensaje=tagName+SEPARADOR;
+                 }
+                 break;
+             case TABLA_CATEGORIA:
+                  String idCategory=jtext_idCategoria.getText().toString();
+                  String categoryName=jtext_valor_category.getText().toString();
+                  if(!idCategory.isEmpty())
+                     this.mensaje=idCategory+SEPARADOR+categoryName;
+                  else{
+                      this.mensaje=categoryName+SEPARADOR;
+                 }
+                 break;
+            case TABLA_COMENTARIOS :
+                  String idComment=jtext_idComment.getText().toString();
+                  String nickc=jtext_nick_comment.getText().toString();
+                  String contenido=jtext_comment_comment.getText().toString();
+                  if(!idComment.isEmpty())
+                     this.mensaje=idComment+SEPARADOR+contenido;//+nickc+SEPARADOR
+                  else{
+                      this.mensaje=idComment+SEPARADOR;
+                 }
+                 break;
+            
+        }      
         return  this.mensaje;
-
     }
-    
- 
 
     @Override
     public void cerrar() {
@@ -991,91 +1715,35 @@ public class VistaJFrame_menu extends javax.swing.JFrame implements IVista{
         int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
         this.setLocation(x, y);
     }
-
-
-
-     private void rellenarUsarios(String mensaje) {
-            Usuario u=null;
-            this.list_usuarios=new ArrayList<>();
-            int dosPuntos=mensaje.indexOf(":");
-            String msg=mensaje.substring(dosPuntos+3);
-           // System.out.println(msg);
-            String cod, email, nick, nombre;
-            String[]vstr=msg.split(";");
-            for(String s : vstr){
-                  String[]splitDatos=s.split(":");
-                  cod=splitDatos[0];
-                  email=splitDatos[1];
-                   nick=splitDatos[2];
-                    nombre=splitDatos[3];
-                    u=new Usuario(cod, nombre, email, nick);
-                    this.list_usuarios.add(u);
-            }
-               
-        }
-     private void rellenarEstafador(String mensaje) {
-             Estafador e=null;
-            this.list_estafadores=new ArrayList<>();
-            int dosPuntos=mensaje.indexOf(":");
-            String msg=mensaje.substring(dosPuntos+3);
-            
-            String datos, id;
-            String[]vstr=msg.split(";");
-            for(String s : vstr){
-                  String[]splitDatos=s.split(":");
-                  datos=splitDatos[0];
-                  id=splitDatos[1];
-                  e=new Estafador(id, datos);
-                  this.list_estafadores.add(e);
-            }    
-     }  
-     
-     
-     private void rellenarComments(String mensaje) {
-         Comentario e=null;
-            this.list_comments=new ArrayList<>();
-            int dosPuntos=mensaje.indexOf(":");
-            String msg=mensaje.substring(dosPuntos+3);
-            
-            String datos, id, nick;
-            String[]vstr=msg.split(";");
-            for(String s : vstr){
-                  String[]splitDatos=s.split(":");
-                  datos=splitDatos[0];
-                  id=splitDatos[1];
-                  nick=splitDatos[2];
-                  e=new Comentario(id, datos, nick);
-                  this.list_comments.add(e);
-            }  
-            System.out.println("lit "+list_comments.toString());
-     }  
-     
-     private void rellenarTags(String mensaje) {
-        Etiketa e=null;
-            this.list_tags=new ArrayList<>();
-            int dosPuntos=mensaje.indexOf(":");
-            String msg=mensaje.substring(dosPuntos+3);
-
-            String  id, valor;
-            String[]vstr=msg.split(";");
-            for(String s : vstr){
-               
-                  String[]splitDatos=s.split(":");
-                  id=splitDatos[0];
-                  valor=splitDatos[1];
-                  e=new Etiketa(id, valor);
-                  this.list_tags.add(e);
-            }  
-            System.out.println("lit "+list_tags.toString());
-     }
-   
     
- private DefaultTableModel defaultTableModel=new DefaultTableModel();
- private ArrayList<Estafador_datos> list=new ArrayList<>();
- private ArrayList<Usuario> list_usuarios;
- private ArrayList<Estafador> list_estafadores;
- private ArrayList<Comentario> list_comments;
- private ArrayList<Etiketa> list_tags;
- private String mensaje;
+    public void ocultarCamposestafador(boolean estado){
+         jtext_datos_2estafador.setVisible(estado);
+         jtext_datos_3estafador.setVisible(estado);
+         label_dato2.setVisible(estado);
+         label_dato3.setVisible(estado);
+    }
+
+    
+    private   String[] cabecera; 
+    private DefaultTableModel defaultTableModel=new DefaultTableModel();
+    private ArrayList<Usuario> list_usuarios;
+    private ArrayList<Estafador> list_estafadores;
+    private ArrayList<Comentario> list_comments=new ArrayList<>();
+    private ArrayList<Tag> list_tags;
+     private ArrayList<Categoria> list_category;
+    private String mensaje;
+
+    private UsuarioTabla usuarioDao=new UsuarioTabla();
+    private EstafadorTabla estafadorMenu=new EstafadorTabla();
+    private ComentarioTabla comentarioMenu=new ComentarioTabla();
+    private TagTabla tagMenu=new TagTabla();
+    private CategoriaTabla categoriaMenu=new CategoriaTabla();
+
+    
+    //poner en login
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
+    }
 
 }

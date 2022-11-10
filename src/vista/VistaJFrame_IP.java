@@ -11,7 +11,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JButton;
 
-import static modelo.ModeloProtocoloCliente.*;
+import static utils.ProtocoloCliente.*;
 
 
 /*
@@ -284,7 +284,7 @@ public class VistaJFrame_IP extends javax.swing.JFrame implements IVista {
         if(jText_IP.equals(" ")){
             return SIN_DATOS+SEPARADOR+SIN_DATOS;
         }else{
-             return IP+SEPARADOR+"192.168.1.138";//jText_IP.getText().toString();
+             return IP+SEPARADOR+"192.168.1.137";//jText_IP.getText().toString();
         }
      
     }

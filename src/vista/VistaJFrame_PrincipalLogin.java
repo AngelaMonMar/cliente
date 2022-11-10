@@ -11,7 +11,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JButton;
 
-import static modelo.ModeloProtocoloCliente.*;
+import static utils.ProtocoloCliente.*;
 
 
 /*
@@ -73,7 +73,7 @@ public class VistaJFrame_PrincipalLogin extends javax.swing.JFrame implements IV
 
         jText_nick.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jText_nick.setForeground(new java.awt.Color(153, 153, 153));
-        jText_nick.setText("Nick");
+        jText_nick.setText("pep");
         jText_nick.setToolTipText("");
         jText_nick.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jText_nick.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,11 +178,9 @@ public class VistaJFrame_PrincipalLogin extends javax.swing.JFrame implements IV
 
         jText_pw.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jText_pw.setForeground(new java.awt.Color(153, 153, 153));
-        jText_pw.setText("Contraseña");
+        jText_pw.setText("111");
         jText_pw.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jText_pw.setCaretPosition(4);
         jText_pw.setPreferredSize(new java.awt.Dimension(32, 23));
-        jText_pw.setScrollOffset(0);
         jText_pw.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jText_pwMouseClicked(evt);
@@ -383,7 +381,8 @@ public class VistaJFrame_PrincipalLogin extends javax.swing.JFrame implements IV
                  jLabel_login_error.setText(str[1]+" LOGIN_OK");
                 break;
                 case LOGIN_NOT_OK:
-                 jLabel_login_error.setText(str[1]);
+                    System.out.println("Error al loguearse");
+                 jLabel_login_error.setText("Error al loguearse");
                 break;
             case VOLVER_VISTA_LOGIN: // cambiar se debe de abrir otro
                 if(str[1].equals("OK")){// esta registrado
@@ -451,7 +450,8 @@ public class VistaJFrame_PrincipalLogin extends javax.swing.JFrame implements IV
         }else{   
 
           return jText_nick.getText()+SEPARADOR+jText_pw.getText()+
-                  SEPARADOR+Boolean.toString(jCheckBox_recordarLogin.isSelected()); // checkbox devuelve boolean--> casting
+                  SEPARADOR+Boolean.toString(jCheckBox_recordarLogin.isSelected())+
+                          SEPARADOR+"rol_app_escritorio"; // checkbox devuelve boolean--> casting
     }  
     }
     
@@ -460,6 +460,7 @@ public class VistaJFrame_PrincipalLogin extends javax.swing.JFrame implements IV
 
     @Override
     public void cerrar() {
+        
          this.dispose();
     }
 

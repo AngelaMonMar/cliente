@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import static modelo.ModeloProtocoloCliente.*;
+import static utils.ProtocoloCliente.*;
 
 /**
  *
